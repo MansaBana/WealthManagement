@@ -1,0 +1,18 @@
+# Each line contains one profile
+
+
+22 | M | College Student | - | Tier 2 | Single | No kids | ₹10K (Living with family, college expenses) | India
+21 | F | College Passout, Unemployed | - | Tier 1 | Single | No kids | ₹12K (Job search, dependent on family) | USA
+24 | M | Salaried (Sales Executive) | ₹40K | Tier 3 | Single | No kids | ₹20K (Rent, food, transportation) | Germany
+26 | F | Salaried (Graphic Designer) | ₹55K | Tier 1 | Single | No kids | ₹35K (Higher rent, social lifestyle) | UK
+27 | M | Salaried (Software Engineer) | ₹120K | Tier 2 | Married | 1 kid | ₹50K (Family expenses, rent, childcare) | Australia
+29 | F | Salaried (HR Manager) | ₹90K | Tier 3 | Married | No kids | ₹40K (Home expenses, savings, leisure) | Canada
+23 | M | Freelancer (Digital Marketer) | ₹60K avg | Tier 1 | Single | No kids | ₹30K (Work-related costs, rent, lifestyle) | Brazil
+25 | F | Self-Employed (Bakery Owner) | ₹80K avg | Tier 2 | Single | No kids | ₹35K (Business reinvestment, rent) | South Africa
+32 | M | Salaried (Product Manager) | ₹150K | Tier 1 | Married | 2 kids | ₹80K (Schooling, rent, family expenses) | Japan
+31 | F | Salaried (Finance Consultant) | ₹110K | Tier 3 | Married | 1 kid | ₹45K (Household, savings, schooling) | UAE
+22 | M | Salaried (Junior Developer) | ₹35K | Tier 2 | Single | No kids | ₹18K (Entry-level salary, shared accommodation) | India
+28 | F | Unemployed (Upskilling) | - | Tier 1 | Married | No kids | ₹25K (Spouse supports, learning expenses) | Germany
+30 | M | Business Owner (Digital Agency) | ₹200K avg | Tier 1 | Married | 1 kid | ₹90K (Office expenses, family lifestyle) | USA
+35 | F | Salaried (Lawyer) | ₹130K | Tier 2 | Married | 2 kids | ₹65K (Education, home maintenance) | India
+34 | M | Investor (Stocks & Real Estate) | Variable | Tier 3 | Married | No kids | ₹40K (Lifestyle, travel, investment expenses) | Singapore
