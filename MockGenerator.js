@@ -6,29 +6,6 @@ export const statementSchema = {
   schema: {
     type: "object",
     properties: {
-      statement: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            type: {
-              type: "string",
-            },
-            amount: {
-              type: "number",
-            },
-            date: {
-              type: "string",
-            },
-            from: {
-              type: "string",
-            },
-            category: {
-              type: "string",
-            },
-          },
-        },
-      },
       person: {
         type: "object",
         properties: {
@@ -58,13 +35,96 @@ export const statementSchema = {
           },
         },
       },
+      bank_statement: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            type: {
+              type: "string",
+            },
+            amount: {
+              type: "number",
+            },
+            date: {
+              type: "string",
+            },
+            from: {
+              type: "string",
+            },
+          },
+        },
+      },
+      stock_transactions: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            stock_name: {
+              type: "string",
+            },
+            quantity: {
+              type: "number",
+            },
+            purchase_price: {
+              type: "number",
+            },
+            date_of_purchase: {
+              type: "string",
+            },
+            current_value: {
+              type: "number",
+            },
+          },
+        },
+      },
+      real_estate_properties: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            property_name: {
+              type: "string",
+            },
+            purchase_price: {
+              type: "string",
+            },
+            location: {
+              type: "string",
+            },
+            date_of_purchase: {
+              type: "string",
+            },
+            sq_ft_area: {
+              type: "string",
+            },
+          },
+        },
+      },
+      other_assets: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            asset_type: {
+              type: "string",
+            },
+            purchase_price: {
+              type: "string",
+            },
+            date_of_purchase: {
+              type: "string",
+            },
+          },
+        },
+      },
     },
   },
 };
 
 const variables = {
-  model: "gpt-3.5-turbo",
-  response_format: { type: "json_object"},// json_schema: statementSchema },
+  model: "gpt-4o-mini",
+  response_format: { type: "json_schema", json_schema: statementSchema },
   messages: [
     {
       role: "system",
@@ -75,7 +135,7 @@ const variables = {
                 1. There exists a person as below 
                 2. 22 | M | College Student | - | Tier 2 | Single | No kids | ₹10K (Living with family, college expenses) | India
                 3. Generate 1 month back statement for the person with montly 5 to 7 transactions as json.
-                4. In the stement specify whether it is a debit/credit, how much, when, to or from whom, cateogry of traction (EMI, subscription, general transaction).
+                4. In the stement specify whether it is a debit/credit, how much, when, to or from whom.
                 5. try to diversify and add all the different type of transactions that a person with this profile generally does.
                 6. For example, travel, food, fun, subscriptions, shopping, salary, etc.
 

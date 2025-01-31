@@ -1,0 +1,103 @@
+{
+  "person": {
+    "age": 22,
+    "gender": "M",
+    "occupation": "College Student",
+    "location": "India",
+    "relationship_status": "Single",
+    "children": "No kids",
+    "income": "₹10K (Living with family, college expenses)",
+    "expenses": "Monthly expenses managed, primarily on food, travel, and studying materials."
+  },
+  "bank_statement": [
+    {
+      "type": "Debit",
+      "amount": 1500,
+      "date": "2023-09-01",
+      "from": "Food Delivery App"
+    },
+    {
+      "type": "Debit",
+      "amount": 2000,
+      "date": "2023-09-05",
+      "from": "Books and Supplies Store"
+    },
+    {
+      "type": "Debit",
+      "amount": 500,
+      "date": "2023-09-10",
+      "from": "Café"
+    },
+    {
+      "type": "Credit",
+      "amount": 10000,
+      "date": "2023-09-15",
+      "from": "Part-time Job Salary"
+    },
+    {
+      "type": "Debit",
+      "amount": 1200,
+      "date": "2023-09-20",
+      "from": "Transport Fare"
+    },
+    {
+      "type": "Debit",
+      "amount": 2500,
+      "date": "2023-09-25",
+      "from": "Online Subscription Services"
+    },
+    {
+      "type": "Debit",
+      "amount": 800,
+      "date": "2023-09-28",
+      "from": "Shopping Mall"
+    }
+  ],
+  "stock_transactions": [
+    {
+      "stock_name": "Tata Steel",
+      "quantity": 5,
+      "purchase_price": 120,
+      "date_of_purchase": "2023-08-01",
+      "current_value": 150
+    },
+    {
+      "stock_name": "Infosys",
+      "quantity": 3,
+      "purchase_price": 1600,
+      "date_of_purchase": "2023-08-10",
+      "current_value": 1800
+    }
+  ],
+  "real_estate_properties": [
+    {
+      "property_name": "2 BHK Flat",
+      "purchase_price": "₹30 Lakhs",
+      "location": "Mysore, Karnataka",
+      "date_of_purchase": "2020-05-01",
+      "sq_ft_area": "1000 sq ft"
+    }
+  ],
+  "other_assets": [
+    {
+      "asset_type": "Smartphone",
+      "purchase_price": "₹20,000",
+      "date_of_purchase": "2022-09-01"
+    },
+    {
+      "asset_type": "Laptop",
+      "purchase_price": "₹40,000",
+      "date_of_purchase": "2021-11-15"
+    },
+    {
+      "asset_type": "Gold Necklace",
+      "purchase_price": "₹30,000",
+      "date_of_purchase": "2023-07-10"
+    },
+    {
+      "asset_type": "Wrist Watch",
+      "purchase_price": "₹15,000",
+      "date_of_purchase": "2022-03-01"
+    }
+  ]
+}
