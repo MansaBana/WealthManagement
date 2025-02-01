@@ -1,4 +1,9 @@
-const nlp = require("compromise");
+// const nlp = require("compromise");
+const { createCompletion } = require("../utils");
+const { model } = require("mongoose");
+const { response, json } = require("express");
+const { bankStatementSchema } = require("../schema");
+
 
 // Function to extract transaction details
 const extractTransactionDetails = (email) => {
@@ -32,10 +37,30 @@ const extractTransactionDetails = (email) => {
 }
 
 const processEmails = async (emails) => {
-    const processedEmails = await emails?.map((email) => {
-        return extractTransactionDetails(email);
-    });
-    return processedEmails;
+    // const processedEmails = await emails?.map((email) => {
+    //     return extractTransactionDetails(email);
+    // });
+    // return processedEmails;
+ console.log(emails)
+    const variables = {
+      model: "gpt-4o-mini",
+      response_format: { type: "json_schema", json_schema: bankStatementSchema },
+      messages: [
+        { role: "system", content: `Analyse the transaction and give me a JSON object of an analysis return all the transactions made, investments, and other details
+          1. if payment was madde to the credit card it shoud be classified as debit
+          2. if data is not found from the emial it then give a mock data for investments details
+          `},
+        ...emails.map((email) => {
+          return {
+            role: "user",
+            content: `analyse the transaction in this email: ${email.body}`,
+          };
+        }),
+      ]
+    }
+    const aiResponse = await createCompletion(variables)
+
+    return JSON.parse(aiResponse.choices[0].message.content);
 }
 
 module.exports = {processEmails}
