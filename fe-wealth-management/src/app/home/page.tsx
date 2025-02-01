@@ -11,9 +11,10 @@ import {
   Wallet,
 } from "lucide-react";
 import { PieChart } from "@mui/x-charts/PieChart";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function WealthDashboard() {
+  const [data, setData] = useState();
   const currentYear = new Date().getFullYear();
   const monthNames = [
     "January",
@@ -30,33 +31,40 @@ export default function WealthDashboard() {
     "December",
   ];
 
-  const data = () => {
-
+  const fetchData = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    
+
     const raw = JSON.stringify({
-      "emailAddress": "user@example.com"
+      emailAddress: "user@example.com",
     });
-    
+
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
-      redirect: "follow"
+      redirect: "follow",
     };
-    
+
     fetch("http://localhost:3001/api/email", requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("Manveer 1", result);
+        setData(result);
+      })
       .catch((error) => console.error(error));
-  }
+  };
 
   useEffect(() => {
-    data();
-  },[]);
+    fetchData();
+    console.log("Manveer 2", data);
+  }, []);
 
-  const valueFormatter = (value) => `${value}%`;
+  useEffect(() => {
+    console.log("Manveer 2", data?.balance);
+  }, [data]);
+
+  const valueFormatter = (item) => `${item.value}%`;
 
   const currentMonth = monthNames[new Date().getMonth()];
   return (
@@ -74,7 +82,7 @@ export default function WealthDashboard() {
             <h3 className="text-sm font-medium">Total Balance</h3>
             <DollarSign className="h-4 w-4 text-zinc-500" />
           </div>
-          <div className="text-2xl font-bold">$82,451.00</div>
+          <div className="text-2xl font-bold">$ {data?.balance}</div>
           <div className="flex items-center gap-1 text-sm text-green-600">
             <ArrowUp className="h-4 w-4" />
             4.3% from last month
@@ -83,38 +91,38 @@ export default function WealthDashboard() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-7">
-        <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-2">
-
+        <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-3">
           <div className="h-full flex flex-col mx-auto">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold">Spending Breakdown</h2>
-            <p className="text-sm text-zinc-500">Your recent spends</p>
-          </div>
-          <div className="h-full w-full items-center">
-
-          <PieChart
-          leftAxis={{position:"right"}}
-      series={[
-        {
-          data: [
-            { name: 'Windows', value: 75 },
-            { name: 'macOS', value: 15 },
-            { name: 'Linux', value: 8 },
-            { name: 'Others', value: 2 },
-          ], // generate Dynamic
-          highlightScope: { fade: 'global', highlight: 'item' },
-          faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
-          valueFormatter,
-        },
-      ]}
-      height={200}
-    />
-          </div>
-        
-
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Spending Breakdown</h2>
+              <p className="text-sm text-zinc-500">Your recent spends</p>
+            </div>
+            <div className="h-full w-full items-center">
+              <PieChart
+                leftAxis={{ position: "right" }}
+                series={[
+                  {
+                    data: [
+                      { label: "Windows", value: 75 },
+                      { label: "macOS", value: 15 },
+                      { label: "Linux", value: 8 },
+                      { label: "Others", value: 2 },
+                    ], // generate Dynamic
+                    highlightScope: { fade: "global", highlight: "item" },
+                    faded: {
+                      innerRadius: 30,
+                      additionalRadius: -30,
+                      color: "gray",
+                    },
+                    valueFormatter,
+                  },
+                ]}
+                height={200}
+              />
+            </div>
           </div>
         </div>
-        <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-3">
+        <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-2">
           <div className="mb-4">
             <h2 className="text-lg font-semibold">Portfolio Breakdown</h2>
             <p className="text-sm text-zinc-500">Your asset allocation</p>
