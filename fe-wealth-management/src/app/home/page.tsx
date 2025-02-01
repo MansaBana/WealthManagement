@@ -18,6 +18,7 @@ export default function WealthDashboard() {
   const [addGoal, setAddGoal] = useState(false);
   const [graphData, setGraphData] = useState([]);
   const [goalData, setGoalData] = useState([]);
+  const [investments, setInvestments] = useState();
   const currentYear = new Date().getFullYear();
   const monthNames = [
     "January",
@@ -72,6 +73,14 @@ export default function WealthDashboard() {
         }
         setGraphData(data);
         setData(result);
+
+        if (result.investments && result.investments?.list.length > 0) {
+          const sortedInvestments = result.investments?.list.sort(
+            (a, b) => b.amount - a.amount
+          );
+          result.investments.list = sortedInvestments;
+        }
+        setInvestments(result.investments);
       })
       .catch((error) => console.error(error));
   };
@@ -172,32 +181,48 @@ export default function WealthDashboard() {
             <p className="text-sm text-zinc-500">Your asset allocation</p>
           </div>
           <div className="space-y-4">
-            {data?.investments?.list.map((investment, index) => {
-              const investmentPercentage =
-                Math.round(
-                  (investment?.amount * 10000) /
-                    data?.investments?.totalInvestments
-                ) / 100;
-              return (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`h-3 w-3 rounded-full bg-${colors[index]}-500`}
-                      />
-                      {investment?.name}({investmentPercentage}%)
-                    </div>
-                    <span>${investment?.amount}</span>
-                  </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
-                    <div
-                      className={`h-full rounded-full bg-${colors[index]}-500`}
-                      style={{ width: `${investmentPercentage}vw` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+            {investments?.list?.length > 0 && (
+              <div className="space-y-4">
+                {investments.list
+                  .sort((a, b) => b.amount - a.amount) // Sort investments by amount in descending order
+                  .slice(0, 5) // Take the top 4 investments
+                  .map((investment, index) => {
+                    const investmentPercentage =
+                      Math.round(
+                        (investment?.amount * 10000) /
+                          investments?.totalInvestments
+                      ) / 100;
+                    return (
+                      <div className="space-y-2" key={index}>
+                        <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-2">
+                            <div
+                              className={`h-3 w-3 rounded-full bg-${
+                                colors[index % 4]
+                              }-500`}
+                            />
+                            {investment?.name}({investmentPercentage}%)
+                          </div>
+                          <span>${investment?.amount}</span>
+                        </div>
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
+                          <div
+                            className={`h-full rounded-full bg-${
+                              colors[index % 4]
+                            }-500`}
+                            style={{
+                              width: `${Math.min(
+                                Math.max(investmentPercentage, 0),
+                                100
+                              )}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
           </div>
         </div>
 
@@ -318,7 +343,54 @@ export default function WealthDashboard() {
             className="border rounded-md my-2 px-2 py-1 w-full"
           />
         </div>
-      ) : null}
+      ) : (
+        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-7">
+          <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-2">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Ideal Portfolio</h2>
+              <p className="text-sm text-zinc-500">
+                How your asset allocation should be
+              </p>
+            </div>
+            <div className="space-y-4">
+              {/* update from here */}
+              {goalData?.investments?.list.map((investment, index) => {
+                const investmentPercentage =
+                  Math.round(
+                    (investment?.amount * 10000) /
+                      data?.investments?.totalInvestments
+                  ) / 100;
+                return (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className={`h-3 w-3 rounded-full bg-${colors[index]}-500`}
+                        />
+                        {investment?.name}({investmentPercentage}%)
+                      </div>
+                      <span>${investment?.amount}</span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
+                      <div
+                        className={`h-full rounded-full bg-${colors[index]}-500`}
+                        style={{ width: `${investmentPercentage}vw` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-3">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Strategy Overview</h2>
+              {/* <p className="text-sm text-zinc-500">we can only advice you</p> */}
+            </div>
+            <div className="space-y-4">hey you</div>
+          </div>
+        </div>
+      )}
 
       <div className="flex gap-2">
         {!addGoal ? (
