@@ -89,7 +89,66 @@ const bankStatementSchema = {
       },
       required: ["balance", "transactions", "investments"]
     }
+};
+
+const goalSchema = {
+    name: "goal",
+    schema: {
+      type: "object",
+      properties: {
+        goals: {
+          type: "array",
+          description: "List of investment risk categories.",
+          items: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+                description: "Category of risk level."
+              },
+              goalDescription: {
+                type: "string",
+                description: "will be the description of the user input goal"
+              },
+              investments: {
+                type: "array",
+                description: "List of investments in this risk category.",
+                items: {
+                  type: "object",
+                  properties: {
+                    name: {
+                      type: "string",
+                      description: "Name of the investment type."
+                    },
+                    percentage: {
+                      type: "integer",
+                      minimum: 0,
+                      maximum: 100,
+                      description: "Percentage allocation of the investment."
+                    }
+                  },
+                  required: ["name", "percentage"]
+                }
+              },
+              description: {
+                type: "string",
+                description: "A brief description of the risk category."
+              },
+              customMessage: {
+                type: "string",
+                description: "A custom message for the user related to this investment category."
+              }
+            },
+            required: ["name", "investments", "description", "customMessage"]
+          }
+        }
+      },
+      required: ["goals"]
+    }
   };
   
-module.exports = { bankStatementSchema };
+  
+  
+  
+module.exports = { bankStatementSchema, goalSchema };
   
