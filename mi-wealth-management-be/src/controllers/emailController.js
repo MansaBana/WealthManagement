@@ -4,8 +4,10 @@ const {processEmails} = require('../services/emailExtactionService');
 const getEmailsAndExtractData = async (req, res, next) => {
     try {
         // Fetch all documents from the userData collection
-        const emails = await emailData.find({emailAddress: "user@example.com"});
-        console.log("emails", emails);
+        const requestBody = req?.body;
+        console.log(req?.body)
+        const emails = await emailData.find({emailAddress: requestBody?.emailAddress});
+        console.dir(emails, {depth: null});
         const bankStatement = await processEmails(emails[0]?.emails);
         res.json(bankStatement);
       } catch (err) {

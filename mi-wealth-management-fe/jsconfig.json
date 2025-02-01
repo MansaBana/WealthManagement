@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "tsx": "react",
     "paths": {
       "@/*": ["./src/*"]
     }

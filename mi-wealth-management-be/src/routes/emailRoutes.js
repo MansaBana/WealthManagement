@@ -3,6 +3,6 @@ const { getEmailsAndExtractData } = require('../controllers/emailController');
 
 const router = express.Router();
 
-router.get('/', getEmailsAndExtractData);
+router.post('/', getEmailsAndExtractData);
 
 module.exports = router;
