@@ -11,10 +11,13 @@ import {
   Wallet,
 } from "lucide-react";
 import { PieChart } from "@mui/x-charts/PieChart";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function WealthDashboard() {
   const [data, setData] = useState();
+  const [addGoal, setAddGoal] = useState(false);
+  const [graphData, setGraphData] = useState([]);
+  const [goalData, setGoalData] = useState();
   const currentYear = new Date().getFullYear();
   const monthNames = [
     "January",
@@ -30,6 +33,7 @@ export default function WealthDashboard() {
     "November",
     "December",
   ];
+  const colors = ["blue", "green", "yellow", "purple", "pink", "cyan"];
 
   const fetchData = () => {
     const myHeaders = new Headers();
@@ -49,7 +53,24 @@ export default function WealthDashboard() {
     fetch("http://localhost:3001/api/email", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log("Manveer 1", result);
+        let map = {};
+        let totalSpend = 0;
+        result.transactions.map((transaction) => {
+          totalSpend += transaction.amount;
+          if (map[transaction.category]) {
+            map[transaction.category] += transaction.amount;
+          } else {
+            map[transaction.category] = transaction.amount;
+          }
+        });
+        let data: { label: string; value: number }[] = [];
+        for (let key in map) {
+          data.push({
+            label: key,
+            value: Math.round((map[key] * 10000) / totalSpend) / 100,
+          });
+        }
+        setGraphData(data);
         setData(result);
       })
       .catch((error) => console.error(error));
@@ -65,6 +86,32 @@ export default function WealthDashboard() {
   }, [data]);
 
   const valueFormatter = (item) => `${item.value}%`;
+
+  const goalInputRef = useRef(null);
+  const onGoal = () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      goal: goalInputRef?.current?.value,
+      data: data,
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("http://localhost:3001/api/goals", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setAddGoal(false);
+        setGoalData(result);
+      })
+      .catch((error) => console.error(error));
+  };
 
   const currentMonth = monthNames[new Date().getMonth()];
   return (
@@ -102,12 +149,7 @@ export default function WealthDashboard() {
                 leftAxis={{ position: "right" }}
                 series={[
                   {
-                    data: [
-                      { label: "Windows", value: 75 },
-                      { label: "macOS", value: 15 },
-                      { label: "Linux", value: 8 },
-                      { label: "Others", value: 2 },
-                    ], // generate Dynamic
+                    data: graphData,
                     highlightScope: { fade: "global", highlight: "item" },
                     faded: {
                       innerRadius: 30,
@@ -128,57 +170,32 @@ export default function WealthDashboard() {
             <p className="text-sm text-zinc-500">Your asset allocation</p>
           </div>
           <div className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-blue-500" />
-                  Stocks (60%)
+            {data?.investments?.list.map((investment, index) => {
+              const investmentPercentage =
+                Math.round(
+                  (investment?.amount * 10000) /
+                    data?.investments?.totalInvestments
+                ) / 100;
+              return (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`h-3 w-3 rounded-full bg-${colors[index]}-500`}
+                      />
+                      {investment?.name}({investmentPercentage}%)
+                    </div>
+                    <span>${investment?.amount}</span>
+                  </div>
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
+                    <div
+                      className={`h-full rounded-full bg-${colors[index]}-500`}
+                      style={{ width: `${investmentPercentage}vw` }}
+                    />
+                  </div>
                 </div>
-                <span>$34,981.65</span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
-                <div className="h-full w-[60%] rounded-full bg-blue-500" />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-green-500" />
-                  Bonds (25%)
-                </div>
-                <span>$14,575.69</span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
-                <div className="h-full w-[25%] rounded-full bg-green-500" />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-yellow-500" />
-                  Real Estate (10%)
-                </div>
-                <span>$5,830.27</span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
-                <div className="h-full w-[10%] rounded-full bg-yellow-500" />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-purple-500" />
-                  Crypto (5%)
-                </div>
-                <span>$2,915.14</span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
-                <div className="h-full w-[5%] rounded-full bg-purple-500" />
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
 
@@ -190,58 +207,125 @@ export default function WealthDashboard() {
             </p>
           </div>
           <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100">
-                <ArrowDown className="h-4 w-4 text-green-600" />
-              </div>
-              <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium">Received from John Doe</p>
-                <p className="text-xs text-zinc-500">Oct 24, 2023</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-medium text-green-600">+$250.00</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100">
-                <ArrowUp className="h-4 w-4 text-red-600" />
-              </div>
-              <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium">Stock Purchase - AAPL</p>
-                <p className="text-xs text-zinc-500">Oct 23, 2023</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-medium text-red-600">-$1,500.00</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100">
-                <ArrowDown className="h-4 w-4 text-green-600" />
-              </div>
-              <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium">Dividend Payment</p>
-                <p className="text-xs text-zinc-500">Oct 22, 2023</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-medium text-green-600">+$75.50</p>
-              </div>
-            </div>
+            {data?.transactions?.slice(0, 5)?.map((transaction) => {
+              return (
+                <div className="flex items-center gap-4">
+                  {transaction?.type === "Credit" ? (
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100">
+                      <ArrowDown className="h-4 w-4 text-green-600" />
+                    </div>
+                  ) : (
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100">
+                      <ArrowUp className="h-4 w-4 text-red-600" />
+                    </div>
+                  )}
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium">
+                      {transaction?.type === "Credit"
+                        ? `Received from ${transaction?.from}`
+                        : `Sent to ${transaction?.from}`}
+                    </p>
+                    <p className="text-xs text-zinc-500">Oct 24, 2023</p>
+                  </div>
+                  <div className="text-right">
+                    {transaction?.type === "Credit" ? (
+                      <p className="text-sm font-medium text-green-600">
+                        +${transaction?.amount}
+                      </p>
+                    ) : (
+                      <p className="text-sm font-medium text-red-600">
+                        -${transaction?.amount}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
+      {addGoal ? (
+        <div>
+          <h1 className="text-lg font-semibold">Goals</h1>
+          <p className="text-sm text-zinc-500">Your financial aspirations</p>
+          <textarea
+            ref={goalInputRef}
+            className="border rounded-md my-2 px-2 py-1 w-[400px] h-[100px]"
+          />
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-7">
+          <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-2">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Ideal Portfolio</h2>
+              <p className="text-sm text-zinc-500">How your asset allocation should be</p>
+            </div>
+          <div className="space-y-4">
+            {/* update from here */}
+            {goalData?.investments?.list.map((investment, index) => {
+              const investmentPercentage =
+                Math.round(
+                  (investment?.amount * 10000) /
+                    data?.investments?.totalInvestments
+                ) / 100;
+              return (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`h-3 w-3 rounded-full bg-${colors[index]}-500`}
+                      />
+                      {investment?.name}({investmentPercentage}%)
+                    </div>
+                    <span>${investment?.amount}</span>
+                  </div>
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
+                    <div
+                      className={`h-full rounded-full bg-${colors[index]}-500`}
+                      style={{ width: `${investmentPercentage}vw` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          </div>
+          <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-3">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Strategy Overview</h2>
+              {/* <p className="text-sm text-zinc-500">we can only advice you</p> */}
+            </div>
+            <div className="space-y-4">hey you</div>
+          </div>
+        </div>
+      )}
 
-      {/* <div className="flex gap-2">
-        <button className="inline-flex items-center justify-center rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Investment
-        </button>
-        <button className="inline-flex items-center justify-center rounded-md border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black">
+      <div className="flex gap-2">
+        {addGoal ? (
+          <button
+            className="inline-flex items-center justify-center rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black"
+            onSubmit={() => {
+              onGoal();
+            }}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            {"Add Goals"}
+          </button>
+        ) : (
+          <button
+            className="inline-flex items-center justify-center rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black"
+            onSubmit={() => {
+              setAddGoal(true);
+            }}
+          >
+            {"Done"}
+          </button>
+        )}
+        {/* <button className="inline-flex items-center justify-center rounded-md border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black">
           <Clock className="mr-2 h-4 w-4" />
           Transaction History
-        </button>
-      </div> */}
+        </button> */}
+      </div>
     </div>
   );
 }
