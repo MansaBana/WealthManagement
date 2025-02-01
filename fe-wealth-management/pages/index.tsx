@@ -13,7 +13,7 @@ type Mapping = {
 
 
 const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+  apiKey: "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",
   dangerouslyAllowBrowser: true
 });
 
