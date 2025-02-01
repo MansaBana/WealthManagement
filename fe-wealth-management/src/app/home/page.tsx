@@ -34,7 +34,7 @@ export default function WealthDashboard() {
     "November",
     "December",
   ];
-  const colors = ["blue", "green", "yellow", "purple", "pink", "cyan"];
+  const colors = ["DeepSkyBlue", "DarkSeaGreen", "LightSalmon", "MediumPurple", "IndianRed", "cyan"];
 
   const fetchData = () => {
     const myHeaders = new Headers();
@@ -191,14 +191,14 @@ export default function WealthDashboard() {
                         (investment?.amount * 10000) /
                           investments?.totalInvestments
                       ) / 100;
+                    const color = colors[index%5];
                     return (
                       <div className="space-y-2" key={index}>
                         <div className="flex items-center justify-between text-sm">
                           <div className="flex items-center gap-2">
                             <div
-                              className={`h-3 w-3 rounded-full bg-${
-                                colors[index % 4]
-                              }-500`}
+                              style={{ backgroundColor: color }}
+                              className="h-3 w-3 rounded-full"
                             />
                             {investment?.name}({investmentPercentage}%)
                           </div>
@@ -206,15 +206,14 @@ export default function WealthDashboard() {
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
                           <div
-                            className={`h-full rounded-full bg-${
-                              colors[index % 4]
-                            }-500`}
                             style={{
                               width: `${Math.min(
                                 Math.max(investmentPercentage, 0),
                                 100
                               )}%`,
+                              backgroundColor: color, // Apply dynamic color
                             }}
+                            className="h-full rounded-full"
                           />
                         </div>
                       </div>
@@ -315,7 +314,7 @@ export default function WealthDashboard() {
                                   <div
                                     className={`h-full rounded-full bg-${colors[index]}-500`}
                                     style={{
-                                      width: `${investment.percentage-4}%`,
+                                      width: `${investment.percentage - 4}%`,
                                     }}
                                   />
                                 </div>
