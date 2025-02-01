@@ -11,6 +11,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { useEffect } from "react";
 
 export default function WealthDashboard() {
   const currentYear = new Date().getFullYear();
@@ -28,6 +29,17 @@ export default function WealthDashboard() {
     "November",
     "December",
   ];
+
+  const data = () => {
+    fetch("http://localhost:3001/api/email",{method: "POST", body: JSON.stringify({emailAddress: sessionStorage.getItem('Email')})})
+    .then((response)=>{
+      console.log(response);
+    })
+  }
+
+  useEffect(() => {
+    data();
+  },[]);
 
   const valueFormatter = (value) => `${value}%`;
 
@@ -74,7 +86,7 @@ export default function WealthDashboard() {
             { name: 'macOS', value: 15 },
             { name: 'Linux', value: 8 },
             { name: 'Others', value: 2 },
-          ],
+          ], // generate Dynamic
           highlightScope: { fade: 'global', highlight: 'item' },
           faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
           valueFormatter,

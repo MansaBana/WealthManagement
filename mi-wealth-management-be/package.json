@@ -15,6 +15,7 @@
     "compromise": "^14.14.4",
     "express": "^4.21.2",
     "mongoose": "^8.9.6",
+    "my-express-app": "file:",
     "openai": "^4.82.0"
   },
   "devDependencies": {

@@ -13,7 +13,11 @@ export default function SignInPage() {
 
     setTimeout(() => {
       setIsLoading(false)
-    }, 3000)
+    }, 30000);
+
+    const email = emailRef?.current?.value;
+    sessionStorage.setItem('Email',email);
+    window.location.href = '/home';
   }
 
   const emailRef = useRef(null)
