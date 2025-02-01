@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 
 // Middleware
@@ -8,6 +9,10 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
+
+app.use(express.json());
+
+app.use(cors('*'));
 
 const userRoutes = require('./routes/userRoutes');
 const emailRoutes = require('./routes/emailRoutes');

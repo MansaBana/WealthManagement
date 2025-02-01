@@ -31,10 +31,25 @@ export default function WealthDashboard() {
   ];
 
   const data = () => {
-    fetch("http://localhost:3001/api/email",{method: "POST", body: JSON.stringify({emailAddress: sessionStorage.getItem('Email')})})
-    .then((response)=>{
-      console.log(response);
-    })
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    
+    const raw = JSON.stringify({
+      "emailAddress": "user@example.com"
+    });
+    
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+    
+    fetch("http://localhost:3001/api/email", requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.error(error));
   }
 
   useEffect(() => {
