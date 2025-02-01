@@ -146,9 +146,8 @@ export default function WealthDashboard() {
               <h2 className="text-lg font-semibold">Spending Breakdown</h2>
               <p className="text-sm text-zinc-500">Your recent spends</p>
             </div>
-            <div className="h-full w-full items-center">
+            <div className="h-full w-full items-center hidden-tw">
               <PieChart
-                leftAxis={{ position: "right" }}
                 series={[
                   {
                     data: graphData,
@@ -287,11 +286,11 @@ export default function WealthDashboard() {
                                     {investment?.name}({investment.percentage}%)
                                   </div>
                                 </div>
-                                <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
+                                <div className="h-2 w-[70vw] overflow-hidden rounded-full bg-zinc-100">
                                   <div
                                     className={`h-full rounded-full bg-${colors[index]}-500`}
                                     style={{
-                                      width: `${investment.percentage}%`,
+                                      width: `${investment.percentage-4}%`,
                                     }}
                                   />
                                 </div>
