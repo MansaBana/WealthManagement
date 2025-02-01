@@ -19,6 +19,54 @@ export default function WealthDashboard() {
   const [graphData, setGraphData] = useState([]);
   const [goalData, setGoalData] = useState([]);
   const [investments, setInvestments] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const stockData = [
+    {
+      name: "Stock A",
+      description:
+        "Stock A is showing strong growth with promising developments in AI technology.",
+      recommendation: "Buy",
+      sourceLink: "https://www.example.com/stock-a-latest-news",
+    },
+    {
+      name: "Stock B",
+      description:
+        "Stock B has shown steady performance, with analysts predicting moderate growth.",
+      recommendation: "Hold",
+      sourceLink: "https://www.example.com/stock-b-latest-news",
+    },
+    {
+      name: "Stock C",
+      description:
+        "Stock C is facing a downturn due to recent market changes, analysts recommend caution.",
+      recommendation: "Sell",
+      sourceLink: "https://www.example.com/stock-c-latest-news",
+    },
+    {
+      name: "Stock D",
+      description:
+        "Stock D is rapidly growing due to an increase in demand for renewable energy solutions.",
+      recommendation: "Buy",
+      sourceLink: "https://www.example.com/stock-d-latest-news",
+    },
+    {
+      name: "Stock E",
+      description:
+        "Stock E's market value has been fluctuating, but its potential remains strong in the tech sector.",
+      recommendation: "Hold",
+      sourceLink: "https://www.example.com/stock-e-latest-news",
+    },
+  ];
+
   const currentYear = new Date().getFullYear();
   const monthNames = [
     "January",
@@ -34,7 +82,14 @@ export default function WealthDashboard() {
     "November",
     "December",
   ];
-  const colors = ["DeepSkyBlue", "DarkSeaGreen", "LightSalmon", "MediumPurple", "IndianRed", "cyan"];
+  const colors = [
+    "DeepSkyBlue",
+    "DarkSeaGreen",
+    "LightSalmon",
+    "MediumPurple",
+    "IndianRed",
+    "cyan",
+  ];
 
   const fetchData = () => {
     const myHeaders = new Headers();
@@ -175,9 +230,17 @@ export default function WealthDashboard() {
           </div>
         </div>
         <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-2">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold">Portfolio Breakdown</h2>
-            <p className="text-sm text-zinc-500">Your asset allocation</p>
+          <div className="flex justify-between">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Portfolio Breakdown</h2>
+              <p className="text-sm text-zinc-500">Your asset allocation</p>
+            </div>
+            <button
+              onClick={openModal}
+              className="inline-flex items-center justify-center rounded-md bg-black px-4 mt-1 mb-6 text-sm font-medium text-white transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black"
+            >
+              GenAI Insights
+            </button>
           </div>
           <div className="space-y-4">
             {investments?.list?.length > 0 && (
@@ -191,7 +254,7 @@ export default function WealthDashboard() {
                         (investment?.amount * 10000) /
                           investments?.totalInvestments
                       ) / 100;
-                    const color = colors[index%5];
+                    const color = colors[index % 5];
                     return (
                       <div className="space-y-2" key={index}>
                         <div className="flex items-center justify-between text-sm">
@@ -224,6 +287,52 @@ export default function WealthDashboard() {
           </div>
         </div>
 
+        {/* Modal */}
+
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-auto">
+              <h3 className="text-xl font-semibold text-center">Latest GenAI Insights</h3>
+              <div className="space-y-4">
+                {stockData.map((stock, index) => (
+                  <div key={index} className="border-b py-2">
+                    <h4 className="font-semibold text-lg">{stock.name}</h4>
+                    <p className="text-sm text-gray-700">{stock.description}</p>
+                    <p className="mt-2 text-sm font-bold">
+                      Recommendation:{" "}
+                      <span
+                        className={`${
+                          stock.recommendation === "Buy"
+                            ? "text-green-500"
+                            : stock.recommendation === "Sell"
+                            ? "text-red-500"
+                            : "text-yellow-500"
+                        }`}
+                      >
+                        {stock.recommendation}
+                      </span>
+                    </p>
+                    <a
+                      href={stock.sourceLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 text-sm hover:underline"
+                    >
+                      Source
+                    </a>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={closeModal}
+                className="mt-4 px-4 py-2 bg-black text-white rounded-md hover:bg-black"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-2">
           <div className="mb-4">
             <h2 className="text-lg font-semibold">Recent Transactions</h2>
@@ -232,9 +341,9 @@ export default function WealthDashboard() {
             </p>
           </div>
           <div className="space-y-4">
-            {data?.transactions?.slice(0, 5)?.map((transaction) => {
+            {data?.transactions?.slice(0, 5)?.map((transaction, index) => {
               return (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4" key={index}>
                   {transaction?.type === "Credit" ? (
                     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100">
                       <ArrowDown className="h-4 w-4 text-green-600" />
