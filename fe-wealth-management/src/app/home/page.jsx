@@ -26,6 +26,7 @@ export default function WealthDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [stockData, setStocksData] = useState([]);
   const [totalInvestedAmount, setotalInvestedAmount] = useState(0);
+  const [isHomeLoading, setIsHomeLoading] = useState(true);
   const modalRef = useRef(null);
 
   const theme = createTheme()
@@ -112,6 +113,7 @@ export default function WealthDashboard() {
       .then((result) => {
         let map = {};
         let totalSpend = 0;
+        setIsHomeLoading(false)
         result.transactions.map((transaction) => {
           totalSpend += transaction.amount;
           if (map[transaction.category]) {
@@ -199,8 +201,10 @@ export default function WealthDashboard() {
   }
 
   const currentMonth = monthNames[new Date().getMonth()];
-  return (
-    <div className="flex min-h-screen flex-col gap-4 p-4 md:p-8 bg-slate-50">
+  return ( 
+    <>
+      {isHomeLoading ? <span className="loader w-full h-full m-auto mt-[45vh] bg-slate-500"></span> : (<div className="flex min-h-screen flex-col gap-4 p-4 md:p-8 bg-slate-50">
+      
       <span className="bg-green-500 bg-blue-500 bg-pink-500 bg-orange-500 bg-yellow-500 bg-zinc-500 bg-green-50 bg-blue-50 bg-pink-50 bg-orange-50 bg-yellow-50 bg-zinc-500"></span>
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
@@ -632,6 +636,8 @@ export default function WealthDashboard() {
           Transaction History
         </button> */}
       </div>
-    </div>
+    </div>)}
+    </>
+    
   );
 }
