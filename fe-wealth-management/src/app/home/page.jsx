@@ -33,7 +33,7 @@ export default function WealthDashboard() {
     setIsModalOpen(true);
     const investmentNames = investments.list.map((item) => item.name);
 
-    fetch("http://localhost:3001/api/headlines", {
+    fetch("https://wealthmanagement.onrender.com/api/headlines", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -76,6 +76,15 @@ export default function WealthDashboard() {
     "cyan",
   ];
 
+
+  const tw_colors = [
+    "green",
+    "blue",
+    "orange",
+    "pink",
+    "yellow",
+    "zinc",
+  ];
   const fetchData = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -91,7 +100,7 @@ export default function WealthDashboard() {
       redirect: "follow",
     };
 
-    fetch("http://localhost:3001/api/email", requestOptions)
+    fetch("https://wealthmanagement.onrender.com/api/email", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         let map = {};
@@ -153,7 +162,7 @@ export default function WealthDashboard() {
       redirect: "follow",
     };
 
-    fetch("http://localhost:3001/api/goals", requestOptions)
+    fetch("https://wealthmanagement.onrender.com/api/goals", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAddGoal(false);
@@ -167,6 +176,7 @@ export default function WealthDashboard() {
   const currentMonth = monthNames[new Date().getMonth()];
   return (
     <div className="flex min-h-screen flex-col gap-4 p-4 md:p-8 bg-slate-50">
+      <span className="bg-green-500 bg-blue-500 bg-pink-500 bg-orange-500 bg-yellow-500 bg-zinc-500 bg-green-50 bg-blue-50 bg-pink-50 bg-orange-50 bg-yellow-50 bg-zinc-500"></span>
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
         <p className="text-zinc-500">{`Here's your financial overview ${
@@ -410,16 +420,16 @@ export default function WealthDashboard() {
                                 <div className="flex items-center justify-between text-sm mt-4">
                                   <div className="flex items-center gap-4">
                                     <div
-                                      className={`h-3 w-3 rounded-full bg-${colors[index]}-500`}
+                                      className={`h-3 w-3 rounded-full bg-${tw_colors[index]}-50`}
                                     />
                                     {investment?.name}({investment.percentage}%)
                                   </div>
                                 </div>
-                                <div className="h-2 w-[70vw] overflow-hidden rounded-full bg-zinc-100">
+                                <div className="h-2 w-auto  overflow-hidden rounded-full bg-zinc-100">
                                   <div
-                                    className={`h-full rounded-full bg-${colors[index]}-500`}
+                                    className={`h-full rounded-full bg-${tw_colors[index]}-500`}
                                     style={{
-                                      width: `${investment.percentage - 4}%`,
+                                      width: `${investment.percentage}%`,
                                     }}
                                   />
                                 </div>
