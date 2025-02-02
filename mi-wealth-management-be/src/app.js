@@ -25,25 +25,51 @@ app.post(`/api/goals`, async (req, res) => {
   const data = req.body.data;
   const variables = {
     model: "gpt-4o-mini",
-   response_format: { type: "json_schema", json_schema: goalSchema },
+    response_format: { type: "json_schema", json_schema: goalSchema },
     messages: [
       {
         role: "system",
         content:
           "analyse the goal given by the user and create a investment plan, suggest where the user can reduce or increase the spends, manage their finances geerate a json output all the fields are required",
       },
-      
-      { role: "user", content: `this it the goal ${goal} plan using the users data ${data}` },
+
+      {
+        role: "user",
+        content: `this it the goal ${goal} plan using the users data ${data}`,
+      },
     ],
   };
   const result = await createCompletion(variables);
   console.log("result", result.choices[0].message.content);
-  res.send( JSON.parse(result.choices[0].message.content));
+  res.send(JSON.parse(result.choices[0].message.content));
+});
+app.post(`/api/headlines`, async (req, res) => {
+  console.log("user investments", req.body);
+  const investmentNames = req.body.investmentNames;
+  const variables = {
+    model: "gpt-4o-mini",
+    response_format: { type: "json_schema", json_schema: stockDataSchema },
+    messages: [
+      {
+        role: "system",
+        content:
+          "you will return the json response of stock news analyzing them and providing a brief about those investments going through the web and provide a link of a news article as well",
+      },
+
+      {
+        role: "user",
+        content: `these are the investments ${investmentNames}, give me a json output`,
+      },
+    ],
+  };
+  const result = await createCompletion(variables);
+  console.log("result", result.choices[0].message.content);
+  res.send(JSON.parse(result.choices[0].message.content));
 });
 
 // Error Handler Middleware (must be the last middleware)
 const errorHandler = require("./middleware/errorHandler");
-const { goalSchema } = require("./schema");
+const { goalSchema, stockDataSchema } = require("./schema");
 const { createCompletion } = require("./utils");
 app.use(errorHandler);
 

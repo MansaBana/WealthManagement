@@ -20,52 +20,37 @@ export default function WealthDashboard() {
   const [goalData, setGoalData] = useState([]);
   const [investments, setInvestments] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [stockData, setStocksData] = useState([]);
+  const modalRef = useRef(null);
 
-  const openModal = () => {
+  useEffect(() => {
+    if (isModalOpen) {
+      modalRef.current.showModal();
+    }
+  }, [isModalOpen]);
+
+  const openModal = (investments) => {
     setIsModalOpen(true);
+    const investmentNames = investments.list.map((item) => item.name);
+
+    fetch("http://localhost:3001/api/headlines", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ investmentNames }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Response:", data);
+        setStocksData(data.stocks);
+      })
+      .catch((error) => console.error("Error:", error));
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
-  const stockData = [
-    {
-      name: "Stock A",
-      description:
-        "Stock A is showing strong growth with promising developments in AI technology.",
-      recommendation: "Buy",
-      sourceLink: "https://www.example.com/stock-a-latest-news",
-    },
-    {
-      name: "Stock B",
-      description:
-        "Stock B has shown steady performance, with analysts predicting moderate growth.",
-      recommendation: "Hold",
-      sourceLink: "https://www.example.com/stock-b-latest-news",
-    },
-    {
-      name: "Stock C",
-      description:
-        "Stock C is facing a downturn due to recent market changes, analysts recommend caution.",
-      recommendation: "Sell",
-      sourceLink: "https://www.example.com/stock-c-latest-news",
-    },
-    {
-      name: "Stock D",
-      description:
-        "Stock D is rapidly growing due to an increase in demand for renewable energy solutions.",
-      recommendation: "Buy",
-      sourceLink: "https://www.example.com/stock-d-latest-news",
-    },
-    {
-      name: "Stock E",
-      description:
-        "Stock E's market value has been fluctuating, but its potential remains strong in the tech sector.",
-      recommendation: "Hold",
-      sourceLink: "https://www.example.com/stock-e-latest-news",
-    },
-  ];
 
   const currentYear = new Date().getFullYear();
   const monthNames = [
@@ -236,7 +221,7 @@ export default function WealthDashboard() {
               <p className="text-sm text-zinc-500">Your asset allocation</p>
             </div>
             <button
-              onClick={openModal}
+              onClick={() => openModal(investments)}
               className="inline-flex items-center justify-center rounded-md bg-black px-4 mt-1 mb-6 text-sm font-medium text-white transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black"
             >
               GenAI Insights
@@ -289,48 +274,59 @@ export default function WealthDashboard() {
 
         {/* Modal */}
 
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-auto">
-              <h3 className="text-xl font-semibold text-center">Latest GenAI Insights</h3>
-              <div className="space-y-4">
-                {stockData.map((stock, index) => (
-                  <div key={index} className="border-b py-2">
-                    <h4 className="font-semibold text-lg">{stock.name}</h4>
-                    <p className="text-sm text-gray-700">{stock.description}</p>
-                    <p className="mt-2 text-sm font-bold">
-                      Recommendation:{" "}
-                      <span
-                        className={`${
-                          stock.recommendation === "Buy"
-                            ? "text-green-500"
-                            : stock.recommendation === "Sell"
-                            ? "text-red-500"
-                            : "text-yellow-500"
-                        }`}
+        {isModalOpen && stockData && (
+          <dialog
+            ref={modalRef}
+            className="bg-gray-500 bg-opacity-100 flex items-center rounded-lg justify-center z-50"
+          >
+            {stockData.length > 0 ? (
+              <div className="bg-white p-6 rounded-lg shadow-lg w-auto">
+                <h3 className="text-xl font-semibold text-center mh-2">
+                  Latest GenAI Insights
+                </h3>
+                <div className="space-y-4 h-[70vh] overflow-y-scroll">
+                  {stockData?.map((stock, index) => (
+                    <div key={index} className="border-b py-2">
+                      <h4 className="font-semibold text-lg">{stock.name}</h4>
+                      <p className="text-sm text-gray-700">
+                        {stock.description}
+                      </p>
+                      <p className="mt-2 text-sm font-bold">
+                        Recommendation:{" "}
+                        <span
+                          className={`${
+                            stock.recommendation === "Buy"
+                              ? "text-green-500"
+                              : stock.recommendation === "Sell"
+                              ? "text-red-500"
+                              : "text-yellow-500"
+                          }`}
+                        >
+                          {stock.recommendation}
+                        </span>
+                      </p>
+                      <a
+                        href={stock.sourceLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 text-sm hover:underline"
                       >
-                        {stock.recommendation}
-                      </span>
-                    </p>
-                    <a
-                      href={stock.sourceLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 text-sm hover:underline"
-                    >
-                      Source
-                    </a>
-                  </div>
-                ))}
+                        Source
+                      </a>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={closeModal}
+                  className="mt-4 px-4 py-2 bg-black text-white rounded-md hover:bg-black"
+                >
+                  Close
+                </button>
               </div>
-              <button
-                onClick={closeModal}
-                className="mt-4 px-4 py-2 bg-black text-white rounded-md hover:bg-black"
-              >
-                Close
-              </button>
-            </div>
-          </div>
+            ) : (
+              <span className="loader"></span>
+            )}
+          </dialog>
         )}
 
         <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-2">
