@@ -104,7 +104,7 @@ export default function WealthDashboard() {
             map[transaction.category] = transaction.amount;
           }
         });
-        let data: { label: string; value: number }[] = [];
+        let data = [];
         for (let key in map) {
           data.push({
             label: key,
