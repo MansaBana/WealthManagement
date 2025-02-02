@@ -197,7 +197,7 @@ export default function WealthDashboard() {
       </header>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 gap-2">
-        <div className="rounded-lg border bg-white p-4 shadow-sm">
+        <div className="rounded-lg border bg-white p-4 shadow-sm overflow-x-scroll">
           <div className="flex items-center justify-between pb-2">
             <h3 className="text-sm font-medium">Total Balance</h3>
             <DollarSign className="h-4 w-4 text-zinc-500" />
@@ -211,7 +211,7 @@ export default function WealthDashboard() {
         <div className="rounded-lg border bg-white p-4 shadow-sm">
 
         <div className="font-semibold text-gray-600 text-lg">Achivements</div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-scroll">
           {data?.badges?.map((badge, index) => (
             <div key={index} className="flex items-center gap-2">
               {badge.name === "Investor" && (
