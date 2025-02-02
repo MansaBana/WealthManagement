@@ -12,6 +12,10 @@ import {
 } from "lucide-react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useEffect, useRef, useState } from "react";
+import { ThemeProvider, createTheme } from "@mui/material/styles"
+import CssBaseline from "@mui/material/CssBaseline"
+import { Container, Typography } from "@mui/material"
+import DynamicSpendingChart from "../../components/chart"
 
 export default function WealthDashboard() {
   const [data, setData] = useState();
@@ -21,7 +25,10 @@ export default function WealthDashboard() {
   const [investments, setInvestments] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [stockData, setStocksData] = useState([]);
+  const [totalInvestedAmount, setotalInvestedAmount] = useState(0);
   const modalRef = useRef(null);
+
+  const theme = createTheme()
 
   useEffect(() => {
     if (isModalOpen) {
@@ -130,6 +137,11 @@ export default function WealthDashboard() {
           result.investments.list = sortedInvestments;
         }
         setInvestments(result.investments);
+        const totalInvested = result.investments?.list.reduce((sum, entry) => sum + entry?.amount, 0);
+        console.log(totalInvested)
+        console.log(result)
+        setotalInvestedAmount(totalInvested)
+
       })
       .catch((error) => console.error(error));
   };
@@ -210,8 +222,8 @@ export default function WealthDashboard() {
         </div>
         <div className="rounded-lg border bg-white p-4 shadow-sm">
 
-        <div className="font-semibold text-gray-600 text-lg">Achivements</div>
-        <div className="flex items-center gap-2 overflow-x-scroll">
+        <div className="font-semibold text-gray-600 text-lg">Achievements</div>
+        <div className="flex items-center gap-2 overflow-x-scroll md:overflow-x-none">
           {data?.badges?.map((badge, index) => (
             <div key={index} className="flex items-center gap-2">
               {badge.name === "Investor" && (
@@ -337,13 +349,13 @@ export default function WealthDashboard() {
               <div className="space-y-4">
                 {investments.list
                   .sort((a, b) => b.amount - a.amount) // Sort investments by amount in descending order
-                  .slice(0, 5) // Take the top 4 investments
+                  .slice(0, 7) // Take the top 4 investments
                   .map((investment, index) => {
                     const investmentPercentage =
                       Math.round(
-                        (investment?.amount * 10000) /
-                        investments?.totalInvestments
-                      ) / 100;
+                        (investment?.amount * 100) /
+                        totalInvestedAmount
+                      );
                     const color = colors[index % 5];
                     return (
                       <div className="space-y-2" key={index}>
@@ -540,6 +552,13 @@ export default function WealthDashboard() {
             </>
           );
         })}
+       {data && <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+
+        <DynamicSpendingChart data={data} />
+      </Container>
+    </ThemeProvider> }
       {addGoal ? (
         <div>
           <h1 className="text-lg font-semibold">Goals</h1>
