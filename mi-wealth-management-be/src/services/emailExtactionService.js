@@ -48,7 +48,8 @@ const processEmails = async (emails) => {
       messages: [
         { role: "system", content: `Analyse the transaction and give me a JSON object of an analysis return all the transactions made, investments, and other details
           1. if payment was madde to the credit card it shoud be classified as debit
-          2. if data is not found from the emial it then give a mock data for investments details always give mock for investment list
+          2. assign badges to the user based on the transactions made and their investements
+          3. if data is not found from the emial it then give a mock data for investments details always give mock for investment list
           `},
         ...emails.map((email) => {
           return {

@@ -33,7 +33,7 @@ export default function WealthDashboard() {
     setIsModalOpen(true);
     const investmentNames = investments.list.map((item) => item.name);
 
-    fetch("https://wealthmanagement.onrender.com/api/headlines", {
+    fetch("http://localhost:3001/api/headlines", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export default function WealthDashboard() {
       redirect: "follow",
     };
 
-    fetch("https://wealthmanagement.onrender.com/api/email", requestOptions)
+    fetch("http://localhost:3001/api/email", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         let map = {};
@@ -162,7 +162,7 @@ export default function WealthDashboard() {
       redirect: "follow",
     };
 
-    fetch("https://wealthmanagement.onrender.com/api/goals", requestOptions)
+    fetch("http://localhost:3001/api/goals", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAddGoal(false);
@@ -173,18 +173,30 @@ export default function WealthDashboard() {
       .catch((error) => console.error(error));
   };
 
+  const setBadgeColor = (val) => {
+    switch(val) {
+      case 1:
+        return "#FFD700";
+      case 2:
+        return "#E0E0E0";
+      case 3:
+        return "#CD7F32";
+      default:
+        return "#CD7F32";
+    }
+  }
+
   const currentMonth = monthNames[new Date().getMonth()];
   return (
     <div className="flex min-h-screen flex-col gap-4 p-4 md:p-8 bg-slate-50">
       <span className="bg-green-500 bg-blue-500 bg-pink-500 bg-orange-500 bg-yellow-500 bg-zinc-500 bg-green-50 bg-blue-50 bg-pink-50 bg-orange-50 bg-yellow-50 bg-zinc-500"></span>
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
-        <p className="text-zinc-500">{`Here's your financial overview ${
-          currentMonth ? `for ${currentMonth}` : ""
-        } ${currentYear ? ` ${currentYear}` : ""}`}</p>
+        <p className="text-zinc-500">{`Here's your financial overview ${currentMonth ? `for ${currentMonth}` : ""
+          } ${currentYear ? ` ${currentYear}` : ""}`}</p>
       </header>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 gap-2">
         <div className="rounded-lg border bg-white p-4 shadow-sm">
           <div className="flex items-center justify-between pb-2">
             <h3 className="text-sm font-medium">Total Balance</h3>
@@ -196,7 +208,90 @@ export default function WealthDashboard() {
             4.3% from last month
           </div>
         </div>
+        <div className="rounded-lg border bg-white p-4 shadow-sm">
+
+        <div className="font-semibold text-gray-600 text-lg">Achivements</div>
+        <div className="flex items-center gap-2">
+          {data?.badges?.map((badge, index) => (
+            <div key={index} className="flex items-center gap-2">
+              {badge.name === "Investor" && (
+
+
+
+                <svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="goldGradient" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color={setBadgeColor(badge.level)} />
+                      <stop offset="100%" stop-color={setBadgeColor(badge.level)} />
+                    </linearGradient>
+                    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(0, 0, 0, 0.3)" />
+                    </filter>
+                  </defs>
+                  <polygon points="75,10 135,45 135,105 75,140 15,105 15,45" fill="url(#goldGradient)" stroke={setBadgeColor(badge.level)} stroke-width="3" filter="url(#shadow)" />
+                  <text x="50%" y="50%" font-size="16" font-family="Arial, sans-serif" fill="white" font-weight="bold" text-anchor="middle" alignment-baseline="central">
+                    Investor
+                  </text>
+                </svg>
+
+
+
+
+
+              )}
+              {badge.name === "Responsible Spender" && (
+
+                <svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="silverGradient" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color={setBadgeColor(badge.level)} />
+                      <stop offset="100%" stop-color={setBadgeColor(badge.level)} />
+                    </linearGradient>
+                    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(0, 0, 0, 0.3)" />
+                    </filter>
+                  </defs>
+                  <polygon points="75,10 135,45 135,105 75,140 15,105 15,45" fill="url(#silverGradient)" stroke={setBadgeColor(badge.level)} stroke-width="3" filter="url(#shadow)" />
+                  <text x="50%" y="50%" className="flex flex-col" font-size="16" font-family="Arial, sans-serif" fill="white" font-weight="bold" text-anchor="middle" alignment-baseline="central">
+                    Smart Spender
+                  </text>
+                </svg>
+
+
+
+
+              )}
+              {badge.name === "Smart Saver" && (
+
+                <svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="bronzeGradient" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color={setBadgeColor(badge.level)}/>
+                      <stop offset="100%" stop-color={setBadgeColor(badge.level)} />
+                    </linearGradient>
+                    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(0, 0, 0, 0.3)" />
+                    </filter>
+                  </defs>
+                  <polygon points="75,10 135,45 135,105 75,140 15,105 15,45" fill="url(#bronzeGradient)" stroke={setBadgeColor(badge.level)} stroke-width="3" filter="url(#shadow)" />
+                  <text x="50%" y="50%" font-size="16" font-family="Arial, sans-serif" fill="white" font-weight="bold" text-anchor="middle" alignment-baseline="central">
+                    Smart Saver
+                  </text>
+                </svg>
+
+
+
+
+
+
+              )}
+            </div>
+          ))}
+        </div>
       </div>
+      </div>
+
+   
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-7">
         <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-3">
@@ -247,7 +342,7 @@ export default function WealthDashboard() {
                     const investmentPercentage =
                       Math.round(
                         (investment?.amount * 10000) /
-                          investments?.totalInvestments
+                        investments?.totalInvestments
                       ) / 100;
                     const color = colors[index % 5];
                     return (
@@ -304,13 +399,12 @@ export default function WealthDashboard() {
                       <p className="mt-2 text-sm font-bold">
                         Recommendation:{" "}
                         <span
-                          className={`${
-                            stock.recommendation === "Buy"
-                              ? "text-green-500"
-                              : stock.recommendation === "Sell"
+                          className={`${stock.recommendation === "Buy"
+                            ? "text-green-500"
+                            : stock.recommendation === "Sell"
                               ? "text-red-500"
                               : "text-yellow-500"
-                          }`}
+                            }`}
                         >
                           {stock.recommendation}
                         </span>
@@ -466,7 +560,7 @@ export default function WealthDashboard() {
                 const investmentPercentage =
                   Math.round(
                     (investment?.amount * 10000) /
-                      data?.investments?.totalInvestments
+                    data?.investments?.totalInvestments
                   ) / 100;
                 return (
                   <div className="space-y-2">
