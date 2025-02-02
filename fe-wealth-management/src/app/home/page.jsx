@@ -33,7 +33,7 @@ export default function WealthDashboard() {
     setIsModalOpen(true);
     const investmentNames = investments.list.map((item) => item.name);
 
-    fetch("http://localhost:3001/api/headlines", {
+    fetch("https://wealthmanagement.onrender.com/api/headlines", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export default function WealthDashboard() {
       redirect: "follow",
     };
 
-    fetch("http://localhost:3001/api/email", requestOptions)
+    fetch("https://wealthmanagement.onrender.com/api/email", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         let map = {};
@@ -162,7 +162,7 @@ export default function WealthDashboard() {
       redirect: "follow",
     };
 
-    fetch("http://localhost:3001/api/goals", requestOptions)
+    fetch("https://wealthmanagement.onrender.com/api/goals", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAddGoal(false);
