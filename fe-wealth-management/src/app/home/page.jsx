@@ -449,12 +449,7 @@ export default function WealthDashboard() {
       ) : (
         <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-7">
           <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-2">
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold">Ideal Portfolio</h2>
-              <p className="text-sm text-zinc-500">
-                How your asset allocation should be
-              </p>
-            </div>
+            <span>Plan Your Investments</span>
             <div className="space-y-4">
               {/* update from here */}
               {goalData?.investments?.list.map((investment, index) => {
@@ -484,13 +479,6 @@ export default function WealthDashboard() {
                 );
               })}
             </div>
-          </div>
-          <div className="rounded-lg border bg-white p-4 shadow-sm lg:col-span-3">
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold">Strategy Overview</h2>
-              {/* <p className="text-sm text-zinc-500">we can only advice you</p> */}
-            </div>
-            <div className="space-y-4">hey you</div>
           </div>
         </div>
       )}

@@ -5,9 +5,9 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 export default function SignInPage() {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event) {
     event.preventDefault()
     setIsLoading(true)
 
